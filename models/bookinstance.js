@@ -36,5 +36,4 @@ BookInstanceSchema
       return DateTime.fromJSDate(this.due_back).toLocaleString(DateTime.DATE_MED);
     });
 
-//Export model
 module.exports = mongoose.model('BookInstance', BookInstanceSchema);
