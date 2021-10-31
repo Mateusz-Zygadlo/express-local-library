@@ -1,7 +1,6 @@
-var Genre = require('../models/genre');
-var Book = require('../models/book');
-var async = require('async');
-
+const Genre = require('../models/genre');
+const Book = require('../models/book');
+const async = require('async');
 
 exports.genre_list = function(req, res, next) {
   Genre.find()
@@ -13,29 +12,28 @@ exports.genre_list = function(req, res, next) {
     });
 };
 
-exports.genre_detail = function(req, res, next) {
+exports.genre_detail = function(req, res, next){
     async.parallel({
         genre: function(callback) {
-            Genre.findByIndex(req.params.id)
+            Genre.findById(req.params.id)
               .exec(callback);
         },
 
         genre_books: function(callback) {
-            Book.find(req.params.id)
+            Book.find({ 'genre': req.params.id })
               .exec(callback);
         },
 
     }, function(err, results) {
         if (err) { return next(err); }
-        if (results.genre==null) { // No results.
+        if (results.genre==null) { 
             var err = new Error('Genre not found');
             err.status = 404;
             return next(err);
         }
-        // Successful, so render
+
         res.render('genre_detail', { title: 'Genre Detail', genre: results.genre, genre_books: results.genre_books } );
     });
-
 };
 
 exports.genre_create_get = function(req, res) {
